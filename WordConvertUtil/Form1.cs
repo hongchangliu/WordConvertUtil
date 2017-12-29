@@ -146,7 +146,7 @@ namespace WordConvertUtil
                             wordBdMin = 0;
                         }
                     }
-                    
+
 
                     try
                     {
@@ -169,12 +169,43 @@ namespace WordConvertUtil
                     {
                         speaker = "";
                     }
-                    string word = (speaker.Equals("1") ? "客服" : "客户") +":"+ context.SelectNodes(jo, "$..onebest").Single().Value.ToString();
+                    string word = (speaker.Equals("1") ? "客服" : "客户") + ":" + context.SelectNodes(jo, "$..onebest").Single().Value.ToString();
 
-                    txtContent += wordBdMin + "\t" + edMax + "\t" + word + "\r\n";
+                    txtContent += wordBdMin + "\t" + edMax + "\t" + word + "\t";
+                    //解析wordsResultList
+                    JArray wordsResultList = (JArray)context.SelectNodes(jo, "$..wordsResultList").Single().Value;
+                    for (int j = 0; j < wordsResultList.Count; j++)
+                    {
+                        JObject joResult = (JObject)wordsResultList[j];
+                        JsonPathNode pathNode;
+                        try
+                        {
+                            pathNode = context.SelectNodes(joResult, "$..wordBg").Single();
+                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + "\t";
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            pathNode = context.SelectNodes(joResult, "$..wordEd").Single();
+                            txtContent += pathNode.Value.ToString() + "\t";
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        try
+                        {
+                            pathNode = context.SelectNodes(joResult, "$..wordsName").Single();
+                            txtContent += pathNode.Value.ToString() + "\t";
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    txtContent += "\r\n";
                 }
-                
-                
+
                 #endregion
             }
             else//只要bg有不等于0 ，就去对应的bg和ed，onebest，写入txt
