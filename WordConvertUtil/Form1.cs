@@ -178,6 +178,21 @@ namespace WordConvertUtil
                     string word = (speaker.Equals("1") ? "客服" : "客户") + ":" + context.SelectNodes(jo, "$..onebest").Single().Value.ToString();
 
                     txtContent += wordBdMin + "\t" + edMax + "\t" + word + "\t";
+
+                    double bgDouble = 0;
+                    if (i != 0)
+                    {
+                        try
+                        {
+                            string bg = context.SelectNodes(jo, "$..bg").Single().Value.ToString();
+                            bgDouble = double.Parse(bg);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+
                     //解析wordsResultList
                     JArray wordsResultList = (JArray)context.SelectNodes(jo, "$..wordsResultList").Single().Value;
                     for (int j = 0; j < wordsResultList.Count; j++)
@@ -187,7 +202,7 @@ namespace WordConvertUtil
                         try
                         {
                             pathNode = context.SelectNodes(joResult, "$..wordBg").Single();
-                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + "\t";
+                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + bgDouble + "\t";
                         }
                         catch (Exception)
                         {
@@ -195,7 +210,7 @@ namespace WordConvertUtil
                         try
                         {
                             pathNode = context.SelectNodes(joResult, "$..wordEd").Single();
-                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + " ";
+                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + bgDouble + " ";
                         }
                         catch (Exception)
                         {
