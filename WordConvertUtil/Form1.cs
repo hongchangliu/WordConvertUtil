@@ -36,15 +36,18 @@ namespace WordConvertUtil
         //转换
         private void button1_Click(object sender, EventArgs e)
         {
+            this.button1.Enabled = false;
             if (this.textBox1.Text == "" || this.textBox2.Text == "")
             {
                 MessageBox.Show("请选择json所在的目录和目标目录");
+                this.button1.Enabled = true;
                 return;
             }
             DirectoryInfo di1 = new DirectoryInfo(this.textBox1.Text);
             if (!di1.Exists)
             {
                 MessageBox.Show("您选择的json目录不存在");
+                this.button1.Enabled = true;
                 return;
             }
 
@@ -52,6 +55,7 @@ namespace WordConvertUtil
             if (!di2.Exists)
             {
                 MessageBox.Show("您选择的目标目录不存在");
+                this.button1.Enabled = true;
                 return;
             }
             List<FileInfo> fileList = GetAllFiles(di1);
@@ -68,6 +72,7 @@ namespace WordConvertUtil
                 }
                 catch (Exception ex)
                 {
+                    this.button1.Enabled = true;
                     writeLog("文件读取异常，跳过。" + file.FullName + "  " + ex.Message, 1);
                     errorCount++;
                     return;
@@ -76,6 +81,7 @@ namespace WordConvertUtil
 
             }
             MessageBox.Show("转换完成。转换文件：" + sumCount + " 错误文件：" + errorCount);
+            this.button1.Enabled = true;
         }
 
         private void handleFile(FileInfo file, DirectoryInfo targetDi)
@@ -189,7 +195,7 @@ namespace WordConvertUtil
                         try
                         {
                             pathNode = context.SelectNodes(joResult, "$..wordEd").Single();
-                            txtContent += pathNode.Value.ToString() + "\t";
+                            txtContent += double.Parse(pathNode.Value.ToString()) * 10 + " ";
                         }
                         catch (Exception)
                         {
